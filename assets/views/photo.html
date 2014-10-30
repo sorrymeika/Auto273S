@@ -1,0 +1,13 @@
+<header><em class="ico-back js_back" hl>图片</em> <em class="btn" hl>已上传图片管理</em></header>
+<section class="main js_main photowrap">
+    <ul class="photo_list js_list">
+        <li class="take js_take" hl>拍摄照片</li>
+        <li class="select js_select" hl>选择图片</li>
+    </ul>
+</section>
+<footer class="photo_action"><b class="js_save" hl>保存(0)</b> </footer>
+<script id="list" type="text/template">
+    {%each(i,item) data%}
+        <li class="item" data-id="${item.id}" data-imageid="${item.imageId}" data-src="${item.imageSrc}" hl><img class="js_lazy" data-url="${item.src}" /></li>
+    {%/each%}
+</script>

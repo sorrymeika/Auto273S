@@ -1,0 +1,21 @@
+﻿<header><a class="ico-menu" hl href="/menu/index.html"></a><h1><i class="hd"></i></h1>
+    <a class="ico-add" hl href="/add.html"></a><a class="ico-search" hl href="/search.html"></a></header>
+<section class="main js_main">
+    <ul class="transfer_tab">
+        <li class="curr">全部</li>
+        <li>转籍</li>
+        <li>待补</li>
+        <li>完成</li>
+    </ul>
+    <ul class="transfer_list js_list">
+    </ul>
+</section>
+<script id="list" type="text/template">
+    {%each(i,item) data%}
+        <li data-id="${item.TransferID}" data-shopid="${item.ShopID}" data-type="${item.Type}">
+            <p><span class="name">${item.PlateNumber}{%html item.Type==1?"<i>（转籍）</i>":""%}</span><span class="shop">${item.ShopName}</span></p>
+            <p><span class="percent">${item.Persent}</span><span class="status${item.Status=="1"?1:""}">${item.Status==1?"已完成":"待补充"}</span></p>
+            <div class="edit"></div>
+        </li>
+    {%/each%}
+</script>
