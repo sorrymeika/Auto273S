@@ -493,14 +493,13 @@ public class MainActivity extends Activity {
 
 				cursor.close();
 
-				/*
-				 * BitmapTools bitmapTools = BitmapTools.getInstance(); Bitmap
-				 * bitmap = bitmapTools.BitmapCrop(picturePath);
-				 * 
-				 * Uri uri =
-				 * Uri.parse(MediaStore.Images.Media.insertImage(getContentResolver
-				 * (), bitmap, null, null));
-				 */
+				// BitmapTools bitmapTools = BitmapTools.getInstance();
+				// Bitmap bitmap = bitmapTools.BitmapCrop(picturePath);
+
+				// Uri uri =
+				// Uri.parse(MediaStore.Images.Media.insertImage(getContentResolver(),
+				// bitmap, null, null));
+
 				Uri uri = Uri.parse(picturePath);
 
 				JSONObject json = new JSONObject();
