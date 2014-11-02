@@ -14,24 +14,55 @@ import android.graphics.Canvas;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-
 import android.util.Base64;
 import android.util.Log;
 
 public class BitmapTools {
-	private static BitmapTools tools = new BitmapTools();
+	private static class BitmapToolsHolder {
+		private static BitmapTools instance = new BitmapTools();
+	}
+
+	private BitmapTools() {
+
+	}
+
+	public static BitmapTools getInstance() {
+		return BitmapToolsHolder.instance;
+	}
+
+	public Bitmap CompressImageFromFile(String srcPath, float maxWidth,
+			float maxHeight) {
+		BitmapFactory.Options newOpts = new BitmapFactory.Options();
+		newOpts.inJustDecodeBounds = true;// 只读边,不读内容
+		Bitmap bitmap = BitmapFactory.decodeFile(srcPath, newOpts);
+
+		newOpts.inJustDecodeBounds = false;
+		int w = newOpts.outWidth;
+		int h = newOpts.outHeight;
+
+		int be = 1;// be=1表示不缩放
+		if (w > h && w > maxWidth) {// 如果宽度大的话根据宽度固定大小缩放
+			be = (int) (newOpts.outWidth / maxWidth);
+		} else if (w < h && maxHeight != 0 && h > maxHeight) {// 如果高度高的话根据宽度固定大小缩放
+			be = (int) (newOpts.outHeight / maxHeight);
+		}
+		if (be <= 0)
+			be = 1;
+		newOpts.inSampleSize = be;// 设置采样率
+
+		newOpts.inPreferredConfig = Bitmap.Config.ARGB_8888;// 该模式是默认的,可不设
+		newOpts.inPurgeable = true;// 同时设置才会有效
+		newOpts.inInputShareable = true;// 。当系统内存不够时候图片自动被回收
+
+		bitmap = BitmapFactory.decodeFile(srcPath, newOpts);
+		// return compressBmpFromBmp(bitmap);//原来的方法调用了这个方法企图进行二次压缩
+		// 其实是无效的,大家尽管尝试
+		return bitmap;
+	}
 
 	public String Bitmap2Base64String(Bitmap bitmap) {
 		return "data:image/png;base64,"
 				+ Base64.encodeToString(Bitmap2Bytes(bitmap), Base64.DEFAULT);
-	}
-
-	public static BitmapTools getInstance() {
-		if (tools == null) {
-			tools = new BitmapTools();
-			return tools;
-		}
-		return tools;
 	}
 
 	public Bitmap CompressBitmap(Bitmap image) {
@@ -134,9 +165,7 @@ public class BitmapTools {
 
 	public Bitmap BitmapCrop(String bitmapPath) {
 
-		Bitmap bitmap = Path2Bitmap(bitmapPath);
-
-		bitmap = CompressBitmap(bitmap, 640, 0);
+		Bitmap bitmap = this.CompressImageFromFile(bitmapPath, 640, 0);
 
 		Bitmap result = this.BitmapCrop(bitmap);
 

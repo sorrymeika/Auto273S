@@ -237,3 +237,11 @@ ul.table li > p { display: table-cell; text-align: center; padding-top: 5px; }
 @media screen and (min-width:360px) {
     .photo_list li { width: 119px; height: 119px; }
 }
+
+.uploadedlist { font-size: 12px;}
+.uploadedlist li { padding: 7px; display: -webkit-box; border-bottom: 1px solid #ddd; }
+.uploadedlist li img { display: block; width:80px; height: 80px; }
+.uploadedlist li p { -webkit-box-flex: 1; height: 80px; padding: 10px; line-height: 20px; }
+.uploadedlist li i { display: block; height: 80px; width: 45px; padding-top: 36px; text-align: center; }
+.uploadedlist li i:before { display: inline-block;content: ''; width: 16px; height: 16px; background: url(images/site.png) 0px -225px no-repeat; background-size: 320px auto; }
+.uploadedlist li i.checked:before { background-position: -25px -225px; }

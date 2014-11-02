@@ -12,7 +12,10 @@
             'tap .js_save': 'save',
             'tap .js_back': 'back',
             'tap .js_take': 'takePhoto',
-            'tap .js_select': 'pickImage'
+            'tap .js_select': 'pickImage',
+            'tap .js_photolist': function() {
+                this.forward('/photolist/'+this.route.data.id+'.html');
+            }
         },
         onCreate: function() {
             var that=this;

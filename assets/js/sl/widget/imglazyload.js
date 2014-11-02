@@ -51,6 +51,7 @@
 
         add: function (el) {
             this.pedding=Array.prototype.slice.call($(this.pedding).add(el),0).reverse();    //更新pedding值，用于在页面追加图片
+            this.detect();
         },
 
         _load: function (div) {     //加载图片，并派生事件
