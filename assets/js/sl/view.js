@@ -165,6 +165,9 @@
         trigger: Event.trigger,
 
         $: function (selector) {
+            if(typeof selector==="string"&&selector[0]=='#') {
+                selector='[id="'+selector.substr(1)+'"]';
+            }
             return $(selector,this.$el);
         },
 

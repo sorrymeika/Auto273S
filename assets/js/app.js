@@ -8,7 +8,7 @@
         slice=Array.prototype.slice,
         blankFn=function() { };
 
-    window.hybirdFunctions={};
+    window.hybridFunctions={};
     window.complete=function() {
         if(ios&&queue.length!=0) {
             queue.shift();
@@ -21,43 +21,39 @@
     };
 
     var queue=[],funcguid=0,
-        hybird=function(method,params,hybirdCallback) {
+        hybrid=function(method,params,hybridCallback) {
 
             var data={
                 method: method
             },
-            hybirdReturn;
+            hybridReturn;
 
-            hybirdCallback=typeof params==="function"?params:hybirdCallback;
+            hybridCallback=typeof params==="function"?params:hybridCallback;
             params=typeof params==="function"?null:params;
 
             data.params=params;
 
-            if(typeof hybirdCallback=="function") {
-                hybirdReturn="hybirdCallback"+(++funcguid);
+            if(typeof hybridCallback=="function") {
+                hybridReturn="hybridCallback"+(++funcguid);
 
-                data.callback=hybirdReturn;
-                hybirdFunctions[hybirdReturn]=function() {
-                    hybirdCallback.apply(null,arguments);
-                    delete hybirdFunctions[hybirdReturn];
+                data.callback=hybridReturn;
+                hybridFunctions[hybridReturn]=function() {
+                    hybridCallback.apply(null,arguments);
+                    delete hybridFunctions[hybridReturn];
                 };
             }
 
             if(bridge.isDevelopment) {
                 switch(data.method) {
                     case 'exitLauncher':
-                        hybirdFunctions[hybirdReturn]();
+                        hybridFunctions[hybridReturn]();
                         break;
                 }
                 return;
             }
 
             if(ios) {
-                var url='execslhybirdjsa:a?'+encodeURIComponent(JSON.stringify(data));
-                queue.push(url);
-                if(queue.length==1) {
-                    location.href=url;
-                }
+                alert(JSON.stringify(data));
             } else if(isAndroid) {
                 prompt(JSON.stringify(data));
             }
@@ -65,29 +61,29 @@
         bridge={
             isAndroid: isAndroid,
             versionName: isAndroid?'1.0':"1.0",
-            exec: hybird,
+            exec: hybrid,
             exitLauncher: function(f) {
-                hybird('exitLauncher',function() {
+                hybrid('exitLauncher',function() {
                     f&&f();
                 });
             },
             tip: function(msg) {
-                hybird('tip',msg+"");
+                hybrid('tip',msg+"");
             },
             pickImage: function(f) {
-                hybird('pickImage',f);
+                hybrid('pickImage',f);
             },
             takePhoto: function(f) {
-                hybird('takePhoto',f);
+                hybrid('takePhoto',f);
             },
             queryThumbnailList: function(f) {
-                hybird('queryThumbnailList',f);
+                hybrid('queryThumbnailList',f);
             },
             pickColor: function(f) {
-                hybird('pickColor',f);
+                hybrid('pickColor',f);
             },
             share: function() {
-                hybird('share');
+                hybrid('share');
             },
             isDevelopment: navigator.platform=="Win32"||navigator.platform=="Win64",
             url: function(url) {
@@ -97,17 +93,17 @@
                 callback=typeof files==='function'?files:callback;
                 files=typeof files==='function'?null:files;
 
-                hybird('post',{
+                hybrid('post',{
                     url: this.url(url),
                     files: files,
                     data: data
                 },callback);
             },
             exit: function() {
-                hybird('exit');
+                hybrid('exit');
             },
             update: function(downloadUrl,versionName,f) {
-                hybird('updateApp',{
+                hybrid('updateApp',{
                     downloadUrl: downloadUrl,
                     versionName: versionName
                 },f);
