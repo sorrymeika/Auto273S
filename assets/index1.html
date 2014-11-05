@@ -16,7 +16,7 @@
             }
         });
 
-        seajs.use(['$','sl/sl','app'],function($,sl,_app) {
+        seajs.use(['$','sl/sl','app'],function ($,sl,_app) {
             var app=new sl.Application();
 
             window._ACCOUNT_TYPE="1";
@@ -25,6 +25,7 @@
                 '': 'index',
                 'menu/{name:\\w+}.html': 'menu',
                 'add.html': 'add',
+                'carType.html': 'carType',
                 'buyer.html': 'buyer',
                 'seller.html': 'seller',
                 'shop.html': 'shop',
@@ -44,8 +45,8 @@
             sl.activedApp=app;
 
             if(_app.isAndroid)
-                setTimeout(function() {
-                    _app.exitLauncher(function() { });
+                setTimeout(function () {
+                    _app.exitLauncher(function () { });
                 },1500);
 
         });

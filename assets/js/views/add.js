@@ -45,6 +45,9 @@
             that.listenResult("sellerChange",function (e,data) {
                 that.$('.js_seller').html(data.name);
             });
+            that.listenResult('carTypeChange',function (e,data) {
+                that.$('.js_car_type').val(data);
+            });
         },
         onStart: function () {
         },

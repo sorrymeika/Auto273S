@@ -246,3 +246,11 @@ ul.table li > p { display: table-cell; text-align: center; padding-top: 5px; }
 .uploadedlist li i { display: block; height: 80px; width: 45px; padding-top: 36px; text-align: center; }
 .uploadedlist li i:before { display: inline-block; content: ''; width: 16px; height: 16px; background: url(images/site.png) 0px -225px no-repeat; background-size: 320px auto; }
 .uploadedlist li i.checked:before { background-position: -25px -225px; }
+
+.sel_cartype {display: block;
+font-size: 30px;
+font-weight: bold;
+font-family: 微软雅黑;
+width: 40px;
+padding-top: 2px;
+text-align: center;}

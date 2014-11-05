@@ -1,4 +1,4 @@
-﻿define(['$','sl/sl','app'],function(require,exports,module) {
+﻿define(['$','sl/sl','app'],function (require,exports,module) {
     var $=require('$'),
         sl=require('sl/sl'),
         app=require('app');
@@ -9,7 +9,7 @@
             'tap .js_save': 'save',
             'tap .js_back': 'back'
         },
-        onCreate: function() {
+        onCreate: function () {
             var that=this,
                 sellerInfo=sl.common.sellerInfo;
 
@@ -19,19 +19,19 @@
                 this.$('[name="address"]').val(sellerInfo.address);
             }
         },
-        onStart: function() {
+        onStart: function () {
         },
-        onResume: function() {
+        onResume: function () {
         },
-        onShow: function() {
+        onShow: function () {
             if(!localStorage.getItem('USERINFO')) {
                 this.back('/login.html');
             }
         },
-        onDestory: function() {
+        onDestory: function () {
         },
 
-        save: function() {
+        save: function () {
             var sellerInfo={
                 name: this.$('[name="name"]').val(),
                 mobile: this.$('[name="mobile"]').val(),
