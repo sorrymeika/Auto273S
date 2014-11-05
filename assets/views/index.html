@@ -12,8 +12,8 @@
 </section>
 <script id="list" type="text/template">
     {%each(i,item) data%}
-        <li data-id="${item.TransferID}" data-shopid="${item.ShopID}" data-type="${item.Type}">
-            <p><span class="name">${item.PlateNumber}{%html item.Type==1?"<i>（转籍）</i>":""%}</span><span class="shop">${item.ShopName}</span></p>
+        <li data-id="${item.TransferID}" data-shopid="${item.ShopID}" data-type="${item.Type}" data-persent="${item.Persent}">
+            <p><span class="name">${item.PlateNumber}{%html item.Type==1?"<i>（转籍）</i>":""%}{%html item.IsMine?"<i>（专属）</i>":""%}</span><span class="shop">${item.ShopName}</span></p>
             <p><span class="percent">${item.Persent}</span><span class="status${item.Status=="1"?1:""}">${item.Status==1?"已完成":"待补充"}</span></p>
             <div class="edit"></div>
         </li>

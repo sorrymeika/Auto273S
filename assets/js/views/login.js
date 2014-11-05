@@ -15,6 +15,10 @@
         onCreate: function() {
             var that=this;
 
+            if(_ACCOUNT_TYPE=="1") {
+                that.$(".js_hd").html("业务端");
+            }
+
         },
         onDestory: function() {
             this.loading&&this.loading.destory();
@@ -43,7 +47,7 @@
                 data: {
                     account: account,
                     password: md5.md5(password).toUpperCase(),
-                    role: 0
+                    role: _ACCOUNT_TYPE=="1"?1:0
                 },
                 success: function(res) {
                     this.hideLoading();

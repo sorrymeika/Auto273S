@@ -20,6 +20,37 @@
                 var $target=this.$('.js_list li.edit');
                 this.forward("/send/"+$target.data('shopid')+'/'+$target.data('id')+".html")
             },
+            'tap .js_finish': function() {
+                var $target=this.$('.js_list li.edit');
+                if($target.data('persent')!='100%') {
+                    sl.tip("信息不全，无法执行结单操作");
+                    return;
+                }
+                sl.confirm("确认结单？",function() {
+                    var userinfo=JSON.parse(localStorage.getItem('USERINFO'));
+
+                    that.loading.load({
+                        url: '/json/finish',
+                        checkData: false,
+                        data: {
+                            id: $target.data('id'),
+                            auth: userinfo.Auth,
+                            account: userinfo.AccountName
+                        },
+                        success: function(res) {
+                            this.hideLoading();
+                            sl.tip("结单成功");
+
+                            that.load();
+                        },
+                        error: function(res) {
+                            this.hideLoading();
+                            sl.tip(res.msg);
+                        }
+                    });
+                });
+
+            },
             'tap .js_edit': function() {
                 var $target=this.$('.js_list li.edit');
                 this.forward("/modify/"+$target.data('type')+'/'+$target.data('id')+".html")
@@ -70,7 +101,7 @@
 
             that.$list=that.$('.js_list');
             that.loading=new Loading(that.$list);
-            that.$edit=$('<div class="list_edit"><b class="send js_send">派单</b><b class="edit js_edit">编辑</b><b class="del js_del">删除</b></div>');
+            that.$edit=$('<div class="list_edit">'+(_ACCOUNT_TYPE=="1"?'<b class="finish js_finish">结单</b>':'<b class="send js_send">派单</b>')+'<b class="edit js_edit">编辑</b><b class="del js_del">删除</b></div>');
         },
         onStart: function() {
         },

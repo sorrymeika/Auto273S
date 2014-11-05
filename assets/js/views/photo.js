@@ -1,8 +1,9 @@
-﻿define(['$','sl/sl','app','sl/widget/loading','sl/widget/imglazyload'],function(require,exports,module) {
+﻿define(['$','sl/sl','app','sl/widget/loading','sl/widget/imglazyload','sl/widget/dialog'],function(require,exports,module) {
     var $=require('$'),
         sl=require('sl/sl'),
         app=require('app'),
         ImgLazyload=require('sl/widget/imglazyload'),
+        Dialog=require('sl/widget/dialog'),
         Loading=require('sl/widget/loading');
 
     module.exports=sl.Activity.extend({
@@ -115,16 +116,21 @@
         takePhoto: function() {
             var that=this;
 
-            app.takePhoto(function(res) {
-                that._appendImage(res);
+            sl.confirm('请上传车辆的产权证、行驶证、身份证照片',function() {
+                app.takePhoto(function(res) {
+                    that._appendImage(res);
+                });
             });
+
+
         },
 
         pickImage: function() {
             var that=this;
-
-            app.pickImage(function(res) {
-                that._appendImage(res);
+            sl.confirm('请上传车辆的产权证、行驶证、身份证照片',function() {
+                app.pickImage(function(res) {
+                    that._appendImage(res);
+                });
             });
         }
 

@@ -23,7 +23,6 @@
                 pageSize: 100,
                 data: {
                     role: 1,
-                    shopId: that.route.data.shopid,
                     auth: userinfo.Auth,
                     account: userinfo.AccountName
                 },

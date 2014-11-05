@@ -74,7 +74,9 @@
                 hybrid('pickImage',f);
             },
             takePhoto: function(f) {
-                hybrid('takePhoto',f);
+                setTimeout(function(){
+                    hybrid('takePhoto',f);
+                },0);
             },
             queryThumbnailList: function(f) {
                 hybrid('queryThumbnailList',f);

@@ -54,12 +54,12 @@ input[type="password"].prompt-text { letter-spacing: 2px; }
 
 .menu-open_enter_animation-from { z-index: 2; -webkit-transform: translate(-40%,0) translateZ(0); -webkit-transition: -webkit-transform 0ms ease 0ms; }
 .menu-open_enter_animation-to { -webkit-transform: translate(0,0) translateZ(0); }
-.menu-open_exit_animation-from { -webkit-transform: translate(0,0) translateZ(0); -webkit-transition: -webkit-transform 0ms ease-in 0ms; }
+.menu-open_exit_animation-from { -webkit-transform: translate(0,0) translateZ(0); -webkit-transition: -webkit-transform 0ms ease 0ms; }
 .menu-open_exit_animation-to { -webkit-transform: translate(40%,0) translateZ(0); }
 
 .menu-close_enter_animation-from { -webkit-transform: translate(40%,0) translateZ(0); z-index: 1; -webkit-transition: -webkit-transform 0ms ease 0ms; }
 .menu-close_enter_animation-to { -webkit-transform: translate(0,0) translateZ(0); }
-.menu-close_exit_animation-from { -webkit-transform: translate(0,0) translateZ(0); -webkit-transition: -webkit-transform 0ms ease-out 0ms; z-index: 3; }
+.menu-close_exit_animation-from { -webkit-transform: translate(0,0) translateZ(0); -webkit-transition: -webkit-transform 0ms ease 0ms; z-index: 3; }
 .menu-close_exit_animation-to { -webkit-transform: translate(-40%,0) translateZ(0); }
 
 
@@ -135,7 +135,7 @@ ul.table li > p { display: table-cell; text-align: center; padding-top: 5px; }
 
 .btn { display: inline-block; }
 
-.aboutwrap { padding-top: 100px; background:#fff; }
+.aboutwrap { padding-top: 100px; background: #fff; }
 .about_logo { background: url(images/site.png) no-repeat 0px -125px; background-size: 320px auto; width: 125px; height: 80px; margin: 0 auto; }
 .about_list { padding-top: 8px; color: #e94609; font-size: 20px; text-align: center; }
 .about_list li:last-child { padding-top: 8px; color: #666; font-size: 14px; }
@@ -196,12 +196,13 @@ ul.table li > p { display: table-cell; text-align: center; padding-top: 5px; }
 .transfer_list li p:nth-child(2) { text-align: right; }
 
 .list_edit { display: -webkit-box; height: 60px; }
-.list_edit b { display: block; -webkit-box-flex: 1; background: #999; color: #fff; text-align: center; font-size: 14px; font-weight: normal; }
+.list_edit b { display: block; -webkit-box-flex: 1; background: #999; color: #fff; text-align: center; font-size: 14px; font-weight: normal; padding-top: 3px; }
 .list_edit b:first-child { background: #737373; }
-.list_edit b:before { content: ''; display: block; width: 30px; height: 30px; margin: 3px auto; background: url(images/site.png) -225px -25px no-repeat; background-size: 320px auto; }
+.list_edit b:before { content: ''; display: block; width: 30px; height: 30px; margin: 0px auto 3px auto; background: url(images/site.png) -225px -25px no-repeat; background-size: 320px auto; }
 .list_edit b:nth-child(2):before { background-position: -255px -25px; }
 .list_edit b:nth-child(3):before { background-position: -285px -25px; }
 .list_edit b:active { background: #888; }
+.list_edit b:first-child.finish:before { background-position: -250px -60px; }
 
 .searchwrap { background-color: #e94609; height: 44px; padding: 5px; }
 .search { background-color: #fff; height: 34px; width: 100%; display: -webkit-box; }
@@ -209,8 +210,8 @@ ul.table li > p { display: table-cell; text-align: center; padding-top: 5px; }
 .search b { display: block; width: 38px; height: 34px; padding-top: 5px; padding-left: 6px; }
 .search b:before { display: block; content: ''; width: 25px; height: 25px; background: url(images/site.png) -200px -100px no-repeat; background-size: 320px auto; }
 
-.search b.save_btn{ background-color:#f37c06; }
-.search b.save_btn:before{ background-position: -100px -100px;  }
+.search b.save_btn { background-color: #f37c06; }
+.search b.save_btn:before { background-position: -100px -100px; }
 
 .photowrap { background-color: #111; }
 .photo_list { padding-top: 1px; overflow: hidden; padding-bottom: 45px; }
@@ -219,10 +220,10 @@ ul.table li > p { display: table-cell; text-align: center; padding-top: 5px; }
 .photo_list li.take.active { background: #666; }
 .photo_list li.take:before { width: 75px; height: 50px; content: ''; display: block; text-align: center; background: url(images/site.png) -125px -125px no-repeat; margin: 0 auto 7px auto; background-size: 320px auto; }
 
-.photo_list li.select {background-color: #333; text-align: center; color: #fff; font-size: 13px; padding-top: 19px; position: relative; }
+.photo_list li.select { background-color: #333; text-align: center; color: #fff; font-size: 13px; padding-top: 19px; position: relative; }
 .photo_list li.select.active { background: #666; }
-.photo_list li.select:before { width: 10px; height: 50px; content: ''; display: block; margin: 0 auto 7px auto; background:#ccc; }
-.photo_list li.select:after { width: 50px; height: 10px; content: ''; display: block; position: absolute; top: 39px; left: 50%; margin-left: -25px; background:#ccc; }
+.photo_list li.select:before { width: 10px; height: 50px; content: ''; display: block; margin: 0 auto 7px auto; background: #ccc; }
+.photo_list li.select:after { width: 50px; height: 10px; content: ''; display: block; position: absolute; top: 39px; left: 50%; margin-left: -25px; background: #ccc; }
 
 .photo_list li.item { position: relative; }
 .photo_list li.item:after { content: ''; display: block; position: absolute; width: 16px; height: 16px; background-color: rgba(0,0,0,.5); right: 6px; top: 6px; }
@@ -238,10 +239,10 @@ ul.table li > p { display: table-cell; text-align: center; padding-top: 5px; }
     .photo_list li { width: 119px; height: 119px; }
 }
 
-.uploadedlist { font-size: 12px;}
+.uploadedlist { font-size: 12px; }
 .uploadedlist li { padding: 7px; display: -webkit-box; border-bottom: 1px solid #ddd; }
-.uploadedlist li img { display: block; width:80px; height: 80px; }
+.uploadedlist li img { display: block; width: 80px; height: 80px; }
 .uploadedlist li p { -webkit-box-flex: 1; height: 80px; padding: 10px; line-height: 20px; }
 .uploadedlist li i { display: block; height: 80px; width: 45px; padding-top: 36px; text-align: center; }
-.uploadedlist li i:before { display: inline-block;content: ''; width: 16px; height: 16px; background: url(images/site.png) 0px -225px no-repeat; background-size: 320px auto; }
+.uploadedlist li i:before { display: inline-block; content: ''; width: 16px; height: 16px; background: url(images/site.png) 0px -225px no-repeat; background-size: 320px auto; }
 .uploadedlist li i.checked:before { background-position: -25px -225px; }
