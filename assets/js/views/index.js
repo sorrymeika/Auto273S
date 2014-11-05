@@ -21,7 +21,8 @@
                 this.forward("/send/"+$target.data('shopid')+'/'+$target.data('id')+".html")
             },
             'tap .js_finish': function() {
-                var $target=this.$('.js_list li.edit');
+                var that=this,
+                    $target=this.$('.js_list li.edit');
                 if($target.data('persent')!='100%') {
                     sl.tip("信息不全，无法执行结单操作");
                     return;
