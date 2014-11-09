@@ -16,7 +16,7 @@
             }
         });
 
-        seajs.use(['$','sl/sl','app'],function($,sl,_app) {
+        seajs.use(['$','sl/sl','app'],function ($,sl,_app) {
             var app=new sl.Application();
 
             window._ACCOUNT_TYPE="0";
@@ -29,13 +29,14 @@
                 'carType.html': 'carType',
                 'seller.html': 'seller',
                 'shop.html': 'shop',
+                'send': 'send',
                 'send/{shopid:\\d+}/{id:\\d+}.html': 'send',
                 'about.html': 'about',
                 'login.html': 'login',
                 'search.html': 'search',
                 'modify/{type:\\d+}/{id:\\d+}.html': 'modify',
-                'photo.html': 'photo',
-                'photo/{id:\\d+}.html': 'photo',
+                'upload/{type:\\d+}.html': 'photo',
+                'photo/{type:\\d+}/{id:\\d+}.html': 'photo',
                 'photolist/{id:\\d+}.html': 'photolist',
                 'photosave.html': 'photosave'
             });
@@ -45,8 +46,8 @@
             sl.activedApp=app;
 
             if(_app.isAndroid)
-                setTimeout(function() {
-                    _app.exitLauncher(function() { });
+                setTimeout(function () {
+                    _app.exitLauncher(function () { });
                 },1500);
 
         });

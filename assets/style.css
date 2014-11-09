@@ -152,9 +152,9 @@ ul.table li > p { display: table-cell; text-align: center; padding-top: 5px; }
 .login_form .btn.active { background: #f39d06; }
 .copyright { position: absolute; bottom: 20px; text-align: center; color: #fff; font-size: 12px; width: 100%; }
 
-.add_img { width: 61px; height: 61px; position: relative; padding: 2px; border: 1px solid #ddd; }
+.add_img { width: 46px; height: 46px; position: relative; padding: 1px; border: 1px solid #ddd; }
 .addwrap { padding: 10px 15px; }
-.add_img img { display: block; width: 55px; height: 55px; background: url(images/site.png) -150px -25px no-repeat; background-size: 320px auto; border: 0; }
+.add_img img { display: block; width: 42px; height: 42px; background: url(images/site.png) -145px -28px no-repeat; background-size: 300px auto; border: 0; }
 
 .add_photo, .add_form li { display: -webkit-box; }
 .add_photo .add_plate, .add_form li { display: -webkit-box; -webkit-box-flex: 1; margin-left: 10px; border-bottom: 1px solid #ddd; }
@@ -167,6 +167,8 @@ ul.table li > p { display: table-cell; text-align: center; padding-top: 5px; }
 .add_form li input.txt_price { color: #e94609; }
 .add_form li .arrow { padding-top: 5px; }
 .add_form li .arrow:after { content: ''; display: block; border-top: 2px solid #999; border-right: 2px solid #999; width: 10px; height: 10px; float: right; -webkit-transform: rotate(45deg); margin-top: 3px; margin-right: 20px; }
+.add_form li.imgcont { padding-top: 2px;padding-bottom: 2px; }
+.add_form li.imgcont span { -webkit-box-flex: 1; }
 
 .shop_list { }
 .shop_list li, .send_list li { border-bottom: 1px solid #ddd; height: 60px; line-height: 60px; padding-left: 10px; }

@@ -1,4 +1,4 @@
-﻿define(['$','sl/sl','app','sl/widget/loading'],function(require,exports,module) {
+﻿define(['$','sl/sl','app','sl/widget/loading'],function (require,exports,module) {
     var $=require('$'),
         sl=require('sl/sl'),
         app=require('app'),
@@ -10,7 +10,7 @@
             'tap .js_list li': 'check',
             'tap .js_save': 'save'
         },
-        onCreate: function() {
+        onCreate: function () {
             var that=this;
 
             that.$list=that.$('.js_list');
@@ -26,43 +26,49 @@
                     auth: userinfo.Auth,
                     account: userinfo.AccountName
                 },
-                success: function(res) {
+                success: function (res) {
                     this.hideLoading();
                     that.$list.html(that.tmpl("list",res));
                 },
-                error: function(res) {
+                error: function (res) {
                     this.hideLoading();
                     sl.tip(res.msg);
                 }
             });
 
         },
-        onStart: function() {
+        onStart: function () {
         },
-        onResume: function() {
+        onResume: function () {
         },
-        onShow: function() {
+        onShow: function () {
             if(!localStorage.getItem('USERINFO')) {
                 this.back('/login.html');
             }
         },
-        onDestory: function() {
+        onDestory: function () {
             this.loading&&this.loading.destory();
         },
 
-        check: function(e) {
+        check: function (e) {
             var $target=$(e.currentTarget);
 
             $target.addClass('check').siblings('.check').removeClass('check');
         },
 
-        save: function() {
+        save: function () {
             var that=this,
                 $check=this.$list.find('.check'),
                 accountId=$check.attr('data-id');
 
             if(!accountId) {
                 sl.tip("请选择派单人");
+                return;
+            }
+
+            if(!that.route.data.id) {
+                that.setResult('sendSelect',accountId);
+                that.back();
                 return;
             }
 
@@ -77,14 +83,14 @@
                     auth: userinfo.Auth,
                     account: userinfo.AccountName
                 },
-                success: function(res) {
+                success: function (res) {
                     this.hideLoading();
                     sl.tip("派单成功");
 
                     that.setResult('sendSuccess',res);
                     that.back('/');
                 },
-                error: function(res) {
+                error: function (res) {
                     this.hideLoading();
                     sl.tip(res.msg);
                 }
