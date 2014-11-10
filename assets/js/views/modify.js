@@ -37,6 +37,9 @@
             that.listenResult('carTypeChange',function (e,data) {
                 that.$('.js_car_type').val(data);
             });
+            that.listenResult('photoChange',function (e,photoType,src,results) {
+                that.$('[data-upload="'+photoType+'"] img').attr('src',src);
+            });
 
             var userinfo=JSON.parse(localStorage.getItem('USERINFO'));
 

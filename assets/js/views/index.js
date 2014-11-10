@@ -125,7 +125,7 @@
             var that=this;
             var userinfo=JSON.parse(localStorage.getItem('USERINFO'));
             that.$list.html("");
-            that.loading.load({
+            that.loading.abort().load({
                 url: '/json/transfer?action=list',
                 data: {
                     auth: userinfo.Auth,
@@ -139,7 +139,7 @@
                     that.$list.html(that.tmpl('list',res));
                 },
                 refresh: function (res) {
-                    that.$list.append(that.tmpl('list',res));
+                    this.$refreshing.before(that.tmpl('list',res));
                 },
                 error: function (res) {
                     this.hideLoading();

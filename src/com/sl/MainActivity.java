@@ -42,6 +42,7 @@ import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.webkit.JsPromptResult;
+import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebStorage;
@@ -52,8 +53,12 @@ import android.widget.Toast;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -92,8 +97,7 @@ public class MainActivity extends Activity {
 			Bundle bundle = msg.getData();
 			switch (msg.what) {
 			case 0:
-				webView.loadUrl("javascript:window.hybridFunctions."
-						+ bundle.getString("callback") + "("
+				webView.loadUrl("javascript:window.hybridFunctions." + bundle.getString("callback") + "("
 						+ bundle.getString("result") + ");");
 				break;
 			case SENSOR_SHAKE:
@@ -104,13 +108,11 @@ public class MainActivity extends Activity {
 	};
 
 	private void setFullScreen() {
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-				WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 	}
 
 	private void cancelFullScreen() {
-		getWindow().setFlags(
-				WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN,
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 	}
 
@@ -122,8 +124,7 @@ public class MainActivity extends Activity {
 	private void loadWebView() {
 
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-			getWindow().setSoftInputMode(
-					WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+			getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 		}
 
 		webView = (UIWebView) this.findViewById(R.id.webview);
@@ -136,8 +137,7 @@ public class MainActivity extends Activity {
 
 		settings.setAllowFileAccess(true);
 		settings.setDatabaseEnabled(true);
-		String dir = this.getApplicationContext()
-				.getDir("database", Context.MODE_PRIVATE).getPath();
+		String dir = this.getApplicationContext().getDir("database", Context.MODE_PRIVATE).getPath();
 		settings.setDatabasePath(dir);
 		settings.setDomStorageEnabled(true);
 		settings.setGeolocationEnabled(true);
@@ -156,31 +156,48 @@ public class MainActivity extends Activity {
 
 		webView.setWebChromeClient(new WebChromeClient() {
 
-			public void onExceededDatabaseQuota(String url,
-					String databaseIdentifier, long currentQuota,
-					long estimatedSize, long totalUsedQuota,
-					WebStorage.QuotaUpdater quotaUpdater) {
+			public void onExceededDatabaseQuota(String url, String databaseIdentifier, long currentQuota,
+					long estimatedSize, long totalUsedQuota, WebStorage.QuotaUpdater quotaUpdater) {
 				quotaUpdater.updateQuota(50 * 1024 * 1024);
 			}
 
 			@Override
-			public boolean onJsPrompt(WebView view, String url, String message,
-					String defaultValue, JsPromptResult result) {
+			public boolean onJsPrompt(WebView view, String url, String message, String defaultValue,
+					JsPromptResult result) {
 
 				try {
 					result.confirm(null);
 
 					JSONObject info = new JSONObject(message);
 
-					hybrid(info.getString("method"),
-							info.has("callback") ? info.getString("callback")
-									: null,
+					hybrid(info.getString("method"), info.has("callback") ? info.getString("callback") : null,
 							info.has("params") ? info.get("params") : null);
 
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
 
+				return true;
+			}
+			
+			@Override
+			public boolean onJsAlert(WebView view, String url, String message, final JsResult result) {
+				
+				AlertDialog.Builder builder = new Builder(MainActivity.this);
+				builder.setTitle("通知");
+				builder.setMessage(message);
+				// 更新
+				builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+						result.confirm();
+					}
+				});
+				
+				Dialog noticeDialog = builder.create();
+				noticeDialog.show();
+				
 				return true;
 			}
 
@@ -195,8 +212,7 @@ public class MainActivity extends Activity {
 		webView.loadUrl("file:///android_asset/index.html");
 	}
 
-	private void hybrid(final String method, final String callback,
-			final Object params) {
+	private void hybrid(final String method, final String callback, final Object params) {
 
 		if (method.equals("exitLauncher")) {
 			exitLauncher(callback);
@@ -207,8 +223,7 @@ public class MainActivity extends Activity {
 			System.exit(0);
 
 		} else if ("tip".equals(method)) {
-			Toast.makeText(MainActivity.this, (String) params,
-					Toast.LENGTH_LONG).show();
+			Toast.makeText(MainActivity.this, (String) params, Toast.LENGTH_LONG).show();
 
 		} else if ("getAppInfo".equals(method)) {
 
@@ -219,17 +234,12 @@ public class MainActivity extends Activity {
 			hybridReturn(callback, thumbnailList.toString());
 
 		} else if ("pickColor".equals(method)) {
-			ColorPickerDialog colorpicker = new ColorPickerDialog(this,
-					0xFFFFFF, "选择背景色",
+			ColorPickerDialog colorpicker = new ColorPickerDialog(this, 0xFFFFFF, "选择背景色",
 					new ColorPickerDialog.OnColorChangedListener() {
 
 						@Override
 						public void colorChanged(int color) {
-							hybridReturn(
-									callback,
-									"\""
-											+ String.format("#%06X",
-													(0xFFFFFF & color)) + "\"");
+							hybridReturn(callback, "\"" + String.format("#%06X", (0xFFFFFF & color)) + "\"");
 						}
 					});
 			colorpicker.show();
@@ -250,9 +260,7 @@ public class MainActivity extends Activity {
 		} else if ("pickImage".equals(method)) {
 			selectImageCallback = callback;
 
-			Intent i = new Intent(
-					Intent.ACTION_PICK,
-					android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+			Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
 			startActivityForResult(i, RESULT_LOAD_IMAGE);
 
@@ -271,8 +279,7 @@ public class MainActivity extends Activity {
 					updateManage = new UpdateDialog(MainActivity.this);
 				}
 
-				updateManage.showNoticeDialog(data.getString("downloadUrl"),
-						data.getString("versionName"));
+				updateManage.showNoticeDialog(data.getString("downloadUrl"), data.getString("versionName"));
 
 			} catch (JSONException e) {
 				e.printStackTrace();
@@ -281,9 +288,7 @@ public class MainActivity extends Activity {
 		} else if ("startMotion".equals(method)) {
 			if (sensorManager != null) {// 注册监听器
 				sensorManager.registerListener(sensorEventListener,
-						sensorManager
-								.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-						SensorManager.SENSOR_DELAY_NORMAL);
+						sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
 				// 第一个参数是Listener，第二个参数是所得传感器类型，第三个参数值获取传感器信息的频率
 			}
 		} else if ("stopMotion".equals(method)) {
@@ -336,10 +341,8 @@ public class MainActivity extends Activity {
 			handler.post(new Runnable() {
 				public void run() {
 
-					Log.i("js", "javascript:window." + func + "(" + param
-							+ ");");
-					webView.loadUrl("javascript:window." + func + "(" + param
-							+ ");");
+					Log.i("js", "javascript:window." + func + "(" + param + ");");
+					webView.loadUrl("javascript:window." + func + "(" + param + ");");
 				}
 			});
 	}
@@ -347,8 +350,7 @@ public class MainActivity extends Activity {
 	private void exitLauncher(final String callback) {
 		cancelFullScreen();
 
-		Animation anim = AnimationUtils
-				.loadAnimation(this, R.anim.push_left_in);
+		Animation anim = AnimationUtils.loadAnimation(this, R.anim.push_left_in);
 
 		webView.startAnimation(anim);
 
@@ -369,8 +371,7 @@ public class MainActivity extends Activity {
 		});
 
 		View viewSplash = this.findViewById(R.id.loading);
-		viewSplash.startAnimation(AnimationUtils.loadAnimation(
-				MainActivity.this, R.anim.push_left_out));
+		viewSplash.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.push_left_out));
 		viewSplash.setVisibility(View.GONE);
 	}
 
@@ -407,8 +408,7 @@ public class MainActivity extends Activity {
 	public void onConfigurationChanged(Configuration newConfig) {
 
 		Log.d("orientation",
-				"orientation " + newConfig.orientation + " "
-						+ webView.getMeasuredWidth() + ","
+				"orientation " + newConfig.orientation + " " + webView.getMeasuredWidth() + ","
 						+ webView.getMeasuredHeight());
 
 		super.onConfigurationChanged(newConfig);
@@ -453,8 +453,7 @@ public class MainActivity extends Activity {
 			Log.d(TAG, "x轴方向的重力加速度" + x + "；y轴方向的重力加速度" + y + "；z轴方向的重力加速度" + z);
 			// 一般在这三个方向的重力加速度达到40就达到了摇晃手机的状态。
 			int medumValue = 19;// 三星 i9250怎么晃都不会超过20，没办法，只设置19了
-			if (Math.abs(x) > medumValue || Math.abs(y) > medumValue
-					|| Math.abs(z) > medumValue) {
+			if (Math.abs(x) > medumValue || Math.abs(y) > medumValue || Math.abs(z) > medumValue) {
 				// vibrator.vibrate(200);
 				Message msg = new Message();
 				msg.what = SENSOR_SHAKE;
@@ -482,8 +481,7 @@ public class MainActivity extends Activity {
 
 				String[] filePathColumn = { MediaStore.Images.Media.DATA };
 
-				Cursor cursor = getContentResolver().query(selectedImage,
-						filePathColumn, null, null, null);
+				Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
 
 				cursor.moveToFirst();
 
@@ -516,14 +514,11 @@ public class MainActivity extends Activity {
 			} else if (requestCode == RESULT_TAKE_PHOTO) {
 				String sdStatus = Environment.getExternalStorageState();
 				if (!sdStatus.equals(Environment.MEDIA_MOUNTED)) { // 检测sd是否可用
-					Log.i("TestFile",
-							"SD card is not avaiable/writeable right now.");
+					Log.i("TestFile", "SD card is not avaiable/writeable right now.");
 					return;
 				}
 
-				String name = DateFormat.format("yyyyMMdd_hhmmss",
-						Calendar.getInstance(Locale.CHINA))
-						+ ".jpg";
+				String name = DateFormat.format("yyyyMMdd_hhmmss", Calendar.getInstance(Locale.CHINA)) + ".jpg";
 
 				// Toast.makeText(this, name, Toast.LENGTH_LONG).show();
 				Bundle bundle = data.getExtras();
@@ -575,10 +570,8 @@ public class MainActivity extends Activity {
 
 					JSONObject json = new JSONObject();
 					try {
-						json.put(".ASPXCOOKIEWebApi",
-								data.getStringExtra("_ASPXCOOKIEWebApi"));
-						json.put("ASP.NET_SessionId",
-								data.getStringExtra("ASP_NET_SessionId"));
+						json.put(".ASPXCOOKIEWebApi", data.getStringExtra("_ASPXCOOKIEWebApi"));
+						json.put("ASP.NET_SessionId", data.getStringExtra("ASP_NET_SessionId"));
 						json.put("UserName", data.getStringExtra("UserName"));
 
 					} catch (JSONException e) {
@@ -603,9 +596,7 @@ public class MainActivity extends Activity {
 		// 获取ContentResolver对象
 		ContentResolver resolver = ctx.getContentResolver();
 		// 获得外部存储卡上的图片缩略图
-		Cursor cursor = resolver.query(
-				MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, null, null,
-				null, null);
+		Cursor cursor = resolver.query(MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, null, null, null, null);
 		// 为了for循环性能优化，用一变量存储数据条数
 		int totalCount = cursor.getCount();
 
@@ -616,16 +607,11 @@ public class MainActivity extends Activity {
 
 			item = new JSONObject();
 
-			int id = cursor.getInt(cursor
-					.getColumnIndexOrThrow(MediaStore.Images.Thumbnails._ID));
-			String src = cursor.getString(cursor
-					.getColumnIndexOrThrow(MediaStore.Images.Thumbnails.DATA));
+			int id = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Images.Thumbnails._ID));
+			String src = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Thumbnails.DATA));
 
-			int imageId = cursor
-					.getInt(cursor
-							.getColumnIndexOrThrow(MediaStore.Images.Thumbnails.IMAGE_ID));
-			String imageSrc = cursor.getString(cursor
-					.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
+			int imageId = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Images.Thumbnails.IMAGE_ID));
+			String imageSrc = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
 
 			try {
 				item.put("id", id);
@@ -653,9 +639,7 @@ public class MainActivity extends Activity {
 		Cursor cursor = queryThumbnails(selection, selectionArgs);
 
 		if (cursor.moveToFirst()) {
-			int imageId = cursor
-					.getInt(cursor
-							.getColumnIndexOrThrow(MediaStore.Images.Thumbnails.IMAGE_ID));
+			int imageId = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Images.Thumbnails.IMAGE_ID));
 			cursor.close();
 			return queryImageById(imageId);
 		} else {
@@ -665,8 +649,7 @@ public class MainActivity extends Activity {
 	}
 
 	private Cursor queryThumbnails(String selection, String[] selectionArgs) {
-		String[] columns = new String[] { MediaStore.Images.Thumbnails.DATA,
-				MediaStore.Images.Thumbnails._ID,
+		String[] columns = new String[] { MediaStore.Images.Thumbnails.DATA, MediaStore.Images.Thumbnails._ID,
 				MediaStore.Images.Thumbnails.IMAGE_ID };
 
 		// 获取上下文
@@ -674,9 +657,7 @@ public class MainActivity extends Activity {
 		// 获取ContentResolver对象
 		ContentResolver resolver = ctx.getContentResolver();
 
-		return resolver.query(
-				MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, columns,
-				selection, selectionArgs,
+		return resolver.query(MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, columns, selection, selectionArgs,
 				MediaStore.Images.Thumbnails.DEFAULT_SORT_ORDER);
 	}
 
@@ -685,8 +666,7 @@ public class MainActivity extends Activity {
 		String[] selectionArgs = new String[] { imageId + "" };
 		Cursor cursor = queryImages(selection, selectionArgs);
 		if (cursor.moveToFirst()) {
-			String path = cursor.getString(cursor
-					.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
+			String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
 			cursor.close();
 
 			return path;
@@ -697,8 +677,7 @@ public class MainActivity extends Activity {
 	}
 
 	public Cursor queryImages(String selection, String[] selectionArgs) {
-		String[] columns = new String[] { MediaStore.Images.Media._ID,
-				MediaStore.Images.Media.DATA,
+		String[] columns = new String[] { MediaStore.Images.Media._ID, MediaStore.Images.Media.DATA,
 				MediaStore.Images.Media.DISPLAY_NAME };
 
 		// 获取上下文
@@ -706,8 +685,7 @@ public class MainActivity extends Activity {
 		// 获取ContentResolver对象
 		ContentResolver resolver = ctx.getContentResolver();
 
-		return resolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-				columns, selection, selectionArgs,
+		return resolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, selection, selectionArgs,
 				MediaStore.Images.Media.DEFAULT_SORT_ORDER);
 	}
 
@@ -730,8 +708,7 @@ public class MainActivity extends Activity {
 
 						Log.d("post", key + '=' + postParams.getString(key));
 
-						postData.add(new BasicNameValuePair(key, postParams
-								.getString(key)));
+						postData.add(new BasicNameValuePair(key, postParams.getString(key)));
 					}
 			}
 
@@ -751,8 +728,7 @@ public class MainActivity extends Activity {
 
 						Log.d("files", key + '=' + postFiles.getString(key));
 
-						files.add(new FormFile(path, new File(path), key,
-								"image/jpeg"));
+						files.add(new FormFile(path, new File(path), key, "image/jpeg"));
 					}
 				}
 
@@ -783,8 +759,7 @@ public class MainActivity extends Activity {
 
 			// Log.i("url", data.getString("url"));
 
-			String result = HttpUtil.post(data.getString("url"), postData,
-					files);
+			String result = HttpUtil.post(data.getString("url"), postData, files);
 
 			return result;
 

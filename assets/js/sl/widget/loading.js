@@ -50,7 +50,7 @@
                 this.$loading.show().find('.js_loading').hide();
             } else {
                 this.$refreshing.find('.js_msg').show().html(msg);
-                this.$refreshing.show().find('.js_loading').hide();
+                this.$refreshing.appendTo(that.$el).show().find('.js_loading').hide();
             }
         },
 
@@ -92,8 +92,8 @@
                 that.$refreshing&&that.$refreshing.hide();
 
             } else {
-                var $refreshing=(that.$refreshing||(that.$refreshing=$(that.refresh))).appendTo(that.$el);
-                $refreshing.show().find('.js_msg').html('正在载入...');
+                var $refreshing=(that.$refreshing||(that.$refreshing=$(that.refresh)));
+                $refreshing.appendTo(that.$el).show().find('.js_msg').html('正在载入...');
                 $refreshing.find('.js_loading').show();
                 that.$loading&&that.$loading.hide();
             }
@@ -121,6 +121,9 @@
 
             if(that.isLoading) return;
             that.isLoading=true;
+
+            that.pageIndex=1;
+            that.params[that.KEY_PAGE]=1;
 
             options=$.extend({
                 url: '',
@@ -153,7 +156,7 @@
             var that=this;
 
             for(var i=records.length-1;i>=0;i--) {
-                records[i].disableAutoRefreshing();
+                records[i]!=that&&records[i].disableAutoRefreshing();
             }
 
             that.params[that.KEY_PAGE]=that.pageIndex;
@@ -180,11 +183,9 @@
                     that.isLoading=false;
 
                     if(that.loadingOptions.check===false||that.check(res)) {
-
                         if(that.loadingOptions.checkData===false||that.hasData(res)) {
+                            that.loadingOptions[that.pageIndex==1?'success':'refresh'].call(that,res,status,xhr);
                             that.checkAutoRefreshing(res);
-
-                            that.loadingOptions.success.call(that,res,status,xhr);
 
                         } else {
                             that._dataNotFound(res);
@@ -283,12 +284,13 @@
 
         abort: function () {
             if(this._xhr) {
-                this.isLoad=false;
+                this.isLoading=false;
                 this._xhr.abort();
                 this._xhr=null;
 
                 this.hideLoading();
             }
+            return this;
         },
 
         destory: function () {

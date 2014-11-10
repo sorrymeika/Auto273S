@@ -65,7 +65,7 @@
                     that.imgLazyload.add(that.$('.js_lazy[data-url]').removeClass('js_lazy'));
                 },
                 refresh: function (res) {
-                    that.$list.append(that.tmpl('list',res));
+                    this.$refreshing.before(that.tmpl('list',res));
                 },
                 error: function (res) {
                     this.hideLoading();
