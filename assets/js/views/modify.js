@@ -63,9 +63,9 @@
                     that.$('.js_price').val(res.data.Price);
                     that.$('.js_car_type').val(res.data.CarType);
                     that.$('.js_txt_region').val(res.data.TransferRegion);
-                    that.$('.js_shop').html(res.data.ShopName);
-                    that.$('.js_buyer').html(data.Buyer);
-                    that.$('.js_seller').html(data.Seller);
+                    that.$('.js_shop').html(res.data.ShopName||'');
+                    that.$('.js_buyer').html(data.Buyer||'');
+                    that.$('.js_seller').html(data.Seller||'');
 
                     that.accountId=res.data.AccountID;
 
@@ -119,11 +119,11 @@
                     sl.tip("请填写车型");
                     return;
                 }
-                if(!sl.common.buyerInfo) {
+                if(!sl.common.buyerInfo||!sl.common.buyerInfo.name) {
                     sl.tip("请填写买方联系方式");
                     return;
                 }
-                if(!sellerInfo) {
+                if(!sellerInfo||!sellerInfo.name) {
                     sl.tip("请填写卖方联系方式");
                     return;
                 }
@@ -167,10 +167,6 @@
                 }
             });
 
-        },
-
-        photo: function () {
-            this.forward('/photo/'+this.route.data.id+'.html');
         },
 
         upload: function (e) {

@@ -1,4 +1,4 @@
-﻿define(['$','sl/sl','app','sl/widget/loading','sl/widget/imglazyload','sl/widget/dialog'],function (require,exports,module) {
+﻿define(['$','sl/sl','app','sl/widget/loading','sl/widget/imglazyload','sl/widget/dialog'],function(require,exports,module) {
     var $=require('$'),
         sl=require('sl/sl'),
         app=require('app'),
@@ -14,11 +14,11 @@
             'tap .js_back': 'back',
             'tap .js_take': 'takePhoto',
             'tap .js_select': 'pickImage',
-            'tap .js_photolist': function () {
+            'tap .js_photolist': function() {
                 this.forward('/photolist/'+this.route.data.id+'.html');
             }
         },
-        onCreate: function () {
+        onCreate: function() {
             var that=this;
 
             that.$list=that.$('.js_list');
@@ -28,28 +28,28 @@
             //that.$list.append(that.tmpl('list',{ data: res }));
             //});
         },
-        onStart: function () {
+        onStart: function() {
         },
-        onResume: function () {
+        onResume: function() {
         },
-        onShow: function () {
+        onShow: function() {
             if(!localStorage.getItem('USERINFO')) {
                 this.back('/');
             }
         },
-        onDestory: function () {
+        onDestory: function() {
             this.loading&&this.loading.destory();
             //this.imgLazyload&&this.imgLazyload.destory();
         },
 
-        check: function (e) {
+        check: function(e) {
             var $target=$(e.currentTarget);
             $target.toggleClass('check');
 
             this.$(".js_save").html('保存('+this.$list.find('li.check').length+')');
         },
 
-        save: function () {
+        save: function() {
             if(this.$list.find('li.check').length==0) {
                 sl.tip('请至少选择一张图片');
                 return;
@@ -57,7 +57,7 @@
             this.upload();
         },
 
-        upload: function () {
+        upload: function() {
             var that=this,
                 checked=that.$list.find('li.check'),
                 length=checked.length,
@@ -78,19 +78,19 @@
                 desc=["行驶证","保险单","产权证","买方身份证","卖方身份证"][photoType-1],
                 results=[],
                 src,
-                post=function () {
+                post=function() {
                     if(i<length) {
                         photo=checked.eq(i).data('path');
 
                         app.post('/json/upload',{
-                            TransferID: that.route.data.id,
+                            TransferID: that.route.data.id||0,
                             Type: photoType,
                             Description: desc,
                             auth: userinfo.Auth,
                             account: userinfo.AccountName
                         },{
                             Photo: photo
-                        },function (res) {
+                        },function(res) {
                             if(res&&res.success) {
                                 results.push(res.photoId);
                                 src=res.src;
@@ -104,6 +104,7 @@
                         sl.tip(error==0?"全部图片上传成功！":((length-error)+"张成功,"+error+"张失败！"));
                         that.loading.hideLoading();
                         that.setResult("photoChange",photoType,src,results);
+                        that.back();
                     }
                     i++;
                 };
@@ -111,24 +112,24 @@
             post();
         },
 
-        _appendImage: function (res) {
+        _appendImage: function(res) {
             var that=this;
 
             that.$list.append('<li class="item check" data-path="'+res.path+'" hl><img class="js_lazy" src="'+res.src+'" /></li>');
             this.$(".js_save").html('保存('+this.$list.find('li.check').length+')');
         },
 
-        takePhoto: function () {
+        takePhoto: function() {
             var that=this;
-            app.takePhoto(function (res) {
+            app.takePhoto(function(res) {
                 that._appendImage(res);
             });
 
         },
 
-        pickImage: function () {
+        pickImage: function() {
             var that=this;
-            app.pickImage(function (res) {
+            app.pickImage(function(res) {
                 that._appendImage(res);
             });
         }

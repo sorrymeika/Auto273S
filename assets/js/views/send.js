@@ -8,7 +8,8 @@
         template: 'views/send.html',
         events: {
             'tap .js_list li': 'check',
-            'tap .js_save': 'save'
+            'tap .js_save': 'save',
+            'tap .js_back': 'back'
         },
         onCreate: function () {
             var that=this;
@@ -88,7 +89,7 @@
                     sl.tip("派单成功");
 
                     that.setResult('sendSuccess',res);
-                    that.back('/');
+                    that.back();
                 },
                 error: function (res) {
                     this.hideLoading();
