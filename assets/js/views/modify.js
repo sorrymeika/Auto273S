@@ -8,7 +8,7 @@
         template: 'views/modify.html',
         events: {
             'tap .js_save': 'save',
-            'tap .js_img': 'photo'
+            'tap [data-upload]': 'upload'
         },
         onCreate: function () {
             var that=this;
@@ -171,6 +171,10 @@
 
         photo: function () {
             this.forward('/photo/'+this.route.data.id+'.html');
+        },
+
+        upload: function (e) {
+            this.forward('/photo/'+$(e.currentTarget).data('upload')+'/'+this.route.data.id+'.html');
         }
 
     });
