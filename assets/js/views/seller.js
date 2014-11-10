@@ -14,9 +14,9 @@
                 sellerInfo=sl.common.sellerInfo;
 
             if(sellerInfo) {
-                this.$('[name="name"]').val(sellerInfo.name);
-                this.$('[name="mobile"]').val(sellerInfo.mobile);
-                this.$('[name="address"]').val(sellerInfo.address);
+                this.$('[name="name"]').val(sellerInfo.name||'');
+                this.$('[name="mobile"]').val(sellerInfo.mobile||'');
+                this.$('[name="address"]').val(sellerInfo.address||'');
             }
         },
         onStart: function () {
