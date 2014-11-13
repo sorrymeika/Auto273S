@@ -1,4 +1,4 @@
-﻿define(['$','sl/sl','app','sl/widget/dropdown','sl/widget/loading'],function(require,exports,module) {
+﻿define(['$','sl/sl','app','sl/widget/dropdown','sl/widget/loading'],function (require,exports,module) {
     var $=require('$'),
         sl=require('sl/sl'),
         Dropdown=require('sl/widget/dropdown'),
@@ -9,15 +9,15 @@
         template: 'views/add.html',
         events: {
             'tap .js_save': 'save',
-            'tap .js_back': function() {
+            'tap .js_back': function () {
                 var that=this;
-                sl.confirm("您的新单信息尚未填充完成，确认后退",function() {
+                sl.confirm("您的新单信息尚未填充完成，确认后退",function () {
                     that.back();
                 });
             },
             'tap [data-upload]': 'upload'
         },
-        onCreate: function() {
+        onCreate: function () {
             var that=this;
 
             that.photoTypes=[[],[],[],[],[]];
@@ -33,7 +33,7 @@
                 }],
                 isFixed: true,
                 attacher: that.$('.js_dropdown'),
-                onChange: function(e,i,dataItem) {
+                onChange: function (e,i,dataItem) {
                     that.$('.js_dropdown').html(dataItem.text);
                     if(dataItem.value==1) {
                         that.$('.js_region').show();
@@ -47,45 +47,45 @@
             that.$('.js_prize_bd,.js_s')[_ACCOUNT_TYPE==1?'hide':'show']();
             that.$('.js_c')[_ACCOUNT_TYPE==0?'hide':'show']();
 
-            that.listenResult("shopChange",function(e,data) {
+            that.listenResult("shopChange",function (e,data) {
                 that.$('.js_shop').html(data.shopName);
             });
-            that.listenResult("buyerChange",function(e,data) {
+            that.listenResult("buyerChange",function (e,data) {
                 that.$('.js_buyer').html(data.name);
             });
-            that.listenResult("sellerChange",function(e,data) {
+            that.listenResult("sellerChange",function (e,data) {
                 that.$('.js_seller').html(data.name);
             });
-            that.listenResult('carTypeChange',function(e,data) {
+            that.listenResult('carTypeChange',function (e,data) {
                 that.$('.js_car_type').val(data);
             });
-            that.listenResult('photoChange',function(e,photoType,src,results) {
+            that.listenResult('photoChange',function (e,photoType,src,results) {
                 that.$('[data-upload="'+photoType+'"] img').attr('src',src);
                 that.photoTypes[photoType-1].splice(0,0,results);
             });
-            that.listenResult('sendSelect',function(e,data,name) {
+            that.listenResult('sendSelect',function (e,data,name) {
                 that.accountId=data;
                 that.$('.js_send').val(name);
             });
 
         },
-        onStart: function() {
+        onStart: function () {
         },
-        onResume: function() {
+        onResume: function () {
         },
-        onShow: function() {
+        onShow: function () {
             if(!localStorage.getItem('USERINFO')) {
                 this.back('/login.html');
             }
         },
-        onDestory: function() {
+        onDestory: function () {
             sl.common.shopInfo=null;
             sl.common.buyerInfo=null;
             sl.common.sellerInfo=null;
             this.loading&&this.loading.destory();
         },
 
-        save: function() {
+        save: function () {
             var that=this,
                 sellerInfo=sl.common.sellerInfo,
                 data={
@@ -99,30 +99,35 @@
                 sl.tip("请填写车牌号");
                 return;
             }
+            /*
             if(that.dropdown.index==1&&!data.region) {
-                sl.tip("请填写转籍地");
-                return;
+            sl.tip("请填写转籍地");
+            return;
             }
+            */
 
             if(_ACCOUNT_TYPE==0) {
+                /*
                 if(!data.carType) {
-                    sl.tip("请填写车型");
-                    return;
+                sl.tip("请填写车型");
+                return;
                 }
                 if(!sl.common.buyerInfo||!sl.common.buyerInfo.name) {
-                    sl.tip("请填写买方联系方式");
-                    return;
+                sl.tip("请填写买方联系方式");
+                return;
                 }
                 if(!sellerInfo||!sellerInfo.name) {
-                    sl.tip("请填写卖方联系方式");
-                    return;
+                sl.tip("请填写卖方联系方式");
+                return;
                 }
+                */
 
                 data.accountId=that.accountId;
-
-                data.seller=sellerInfo.name;
-                data.sellerMobile=sellerInfo.mobile;
-                data.sellerAddress=sellerInfo.address;
+                if(sellerInfo) {
+                    data.seller=sellerInfo.name||'';
+                    data.sellerMobile=sellerInfo.mobile||'';
+                    data.sellerAddress=sellerInfo.address||'';
+                }
                 $.extend(data,sl.common.buyerInfo);
             } else {
                 if(!sl.common.shopInfo) {
@@ -133,7 +138,7 @@
             }
 
             var flag=true,pt;
-            $.each(that.photoTypes,function(i,typePhoto) {
+            $.each(that.photoTypes,function (i,typePhoto) {
                 if(typePhoto.length==0) {
                     flag=false;
                     pt=i;
@@ -159,13 +164,13 @@
                 type: 'POST',
                 checkData: false,
                 data: data,
-                success: function(res) {
+                success: function (res) {
                     this.hideLoading();
 
                     that.setResult('addSuccess');
                     that.back('/');
                 },
-                error: function(res) {
+                error: function (res) {
                     this.hideLoading();
                     sl.tip(res.msg);
                 }
@@ -173,7 +178,7 @@
 
         },
 
-        upload: function(e) {
+        upload: function (e) {
             this.forward('/upload/'+$(e.currentTarget).data('upload')+'.html');
         }
 

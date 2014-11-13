@@ -37,7 +37,7 @@
                 mobile: this.$('[name="mobile"]').val(),
                 address: this.$('[name="address"]').val()
             };
-
+            /*
             if(!buyerInfo.name) {
                 sl.tip('请输入姓名');
                 return;
@@ -55,6 +55,7 @@
                 sl.tip('请输入地址');
                 return;
             }
+            */
 
             sl.common.buyerInfo=buyerInfo;
             this.setResult('buyerChange',buyerInfo);
